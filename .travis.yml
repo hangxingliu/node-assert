@@ -1,7 +1,7 @@
 language: node_js
 
 node_js:
-  - '4'
+  # - '4' nodejs4 doesn't support destructuring
   - '6'
   - '8'
   - 'node'

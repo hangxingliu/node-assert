@@ -1,5 +1,7 @@
 # assert
 
+[![Build Status](https://travis-ci.org/hangxingliu/node-assert.svg?branch=master)](https://travis-ci.org/hangxingliu/node-assert)
+
 An enhanced assert library for Node.js
 
 ## Install
