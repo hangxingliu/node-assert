@@ -1,9 +1,10 @@
 //@ts-check
 
-let { Assert, Invoke } = require('..'),
+let { Invoke } = require('..'),
 	{ shouldThrow, noThrow } = require('./_utils');
 
 //@ts-ignore
+//eslint-disable-next-line
 let errorFn1 = () => a.b.c = 1;
 let okFn1 = () => 42;
 

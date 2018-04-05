@@ -1,6 +1,6 @@
 //@ts-check
 
-let { Assert, Invoke } = require('..'),
+let { Assert } = require('..'),
 	{ shouldThrow, noThrow } = require('./_utils');
 
 describe('Assert.is', () => {

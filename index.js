@@ -24,9 +24,14 @@ function Assert(value) {
 		differentFrom, greaterThan, lessThan,
 
 		isString, isNumber, isObject, isTypeof,
-		isArray, length,
+		isArray, isEmpty,
+
+		length, lengthIn,
+
 		containsKeys, containsValue, containsSubString,
 		doesNotContainSubString,
+
+		trim,
 
 		allKeys, allKeyValueTuples, child, sort, parseJSON, each,
 		convertBy,
@@ -93,12 +98,42 @@ function Assert(value) {
 		return chains;
 	}
 
+	function isEmpty() {
+		let type = typeof value;
+		if (Array.isArray(value) || type == 'string')
+			return length(0);
+		if (type == 'number')
+			return equals(0);
+
+		if (type == 'object' && !value) // null
+			return chains;
+
+		return isUndefined();
+	}
+
 	/** @param {number} len */
 	function length(len) {
-		if (!('length' in value))
-			throwAssertionError('`length` is missing in value', 'has `length` field', value);
-		if (value.length !== len)
-			throwAssertionError(`value.length != ${len}`, len, value.length);
+		let actual = value.length;
+		if (typeof actual != 'number')
+			throwAssertionError('value.length is not a number', 'value.length is a number', value);
+		if (actual !== len)
+			throwAssertionError(`value.length != ${len}`, len, actual);
+		return chains;
+	}
+
+	/**
+	 * length of value in range: [min, max)
+	 * @param {number} min
+	 * @param {number} [max]
+	 */
+	function lengthIn(min, max = Infinity) {
+		if (typeof value.length != 'number')
+			throwAssertionError('value.length is not a number', 'value.length is a number', value);
+		let range = `[${min}, ${max})`;
+		if (value.length < min)
+			throwAssertionError(`value.length < ${min}`, range, value.length);
+		if (value.length >= max)
+			throwAssertionError(`value.length < ${min}`, range, value.length);
 		return chains;
 	}
 
@@ -140,17 +175,28 @@ function Assert(value) {
 		return chains;
 	}
 
-	function allKeys() { return convertBy(value => Object.keys(value)); }
-	function allKeyValueTuples() { return convertBy(value => Object.keys(value).map(k => ({ k, v: value[k] })));}
+	function trim() {
+		isString();
+		return Assert(value.trim());
+	}
+
+	function allKeys() {
+		return Assert(Object.keys(value));
+	}
+
+	function allKeyValueTuples() {
+		return Assert(Object.keys(value).map(k => ({ k, v: value[k] })));
+	}
+
 	function sort() {
 		isArray();
-		return convertBy(value => Object.assign([], value).sort());
+		return Assert(Object.assign([], value).sort());
 	}
 
 	/** @param {string} fieldName */
 	function child(fieldName) {
 		containsKeys(fieldName);
-		return convertBy(value => value[fieldName]);
+		return Assert(value[fieldName]);
 	}
 
 	/** @param {(value: any, key: string) => any} handler */
