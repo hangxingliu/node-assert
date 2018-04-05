@@ -1,0 +1,9 @@
+# ignore logs directory
+logs
+
+# ignore archived files
+*.tar
+*.tgz
+
+# vscode settings
+.vscode
